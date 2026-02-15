@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>gsw nadiaa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <style>
+      body {
+        font-family: "Quicksand", sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url("bg.jpg") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      #Content {
+        text-align: center;
+        color: white;
+      }
+
+      .image img {
+        display: none; /* Hide the ending gif by default */
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+      }
+
+      blockquote {
+        border-left: 5px solid #ff0040;
+        padding-left: 20px;
+        font-size: 1.2em;
+        line-height: 1.5;
+        margin: 20px auto;
+        max-width: 600px;
+        display: none; /* Hide blockquote by default */
+      }
+
+      #bodyblur {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bodyblur">
+      <img src="bg.jpg" alt="Background Image" width="100%" height="100%" />
+    </div>
+    <div id="Content">
+      <div class="image">
+        <img
+          id="endingGif"
+          src="ending.gif"
+          alt="Ending GIF"
+          width="250"
+          height="250"
+        />
+      </div>
+      <blockquote>
+        <p id="text"></p>
+        <p id="text2"></p>
+      </blockquote>
+      <audio id="backgroundMusic" src="lagu.mp3" loop></audio>
+      <!-- Tambahkan elemen audio di sini -->
+    </div>
+    <script type="text/javascript">
+      const swals = Swal.mixin({
+        allowOutsideClick: false,
+        cancelButtonColor: "#FF0040",
+      });
+
+      const swalst = Swal.mixin({
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+      let nama;
+      let text;
+      let text2;
+
+      // Function to play background music
+      function playBackgroundMusic() {
+        const audio = document.getElementById("backgroundMusic");
+        audio.play().catch((error) => {
+          console.log("Failed to play the audio:", error);
+        });
+      }
+
+      async function mulaitanya() {
+        const { isConfirmed: tanyawal } = await swals.fire({
+          title: "mau isi nama dulu atau langsung ajaa??",
+          imageUrl: "nama.gif",
+          imageWidth: 170,
+          imageHeight: 170,
+          confirmButtonText: "isi nama",
+          cancelButtonText: "langsung Aja",
+          showCancelButton: true,
+        });
+
+        if (tanyawal) {
+          playBackgroundMusic(); // Play music after user interaction
+          await mulai();
+        } else {
+          playBackgroundMusic(); // Play music after user interaction
+          nama = "sayang";
+          kuis();
+        }
+      }
+
+      async function mulai() {
+        const { value } = await swals.fire({
+          title: "masukin nama kamu",
+          input: "text",
+          imageUrl: "opening.gif",
+          imageWidth: 179,
+          imageHeight: 170,
+          allowOutsideClick: false,
+          showCancelButton: false,
+        });
+
+        if (value && value.length < 11) {
+          nama = value;
+          kuis();
+        } else {
+          await swals.fire("nama harus diisi yaa ^_^");
+          mulai();
+        }
+      }
+
+      async function kuis() {
+        await swalst.fire({
+          title: `buat ${nama} yang lagi batuk :(`,
+          imageUrl: "pijit.gif",
+          imageWidth: 170,
+          imageHeight: 170,
+        });
+        await swalst.fire({
+          title: "semoga cepet sembuh yaa",
+          imageUrl: "sembuh.gif",
+          imageWidth: 170,
+          imageHeight: 170,
+        });
+        await swalst.fire({
+          title: "jangan lupa minum obatnyaa",
+          imageUrl: "lupa.gif",
+          imageWidth: 170,
+          imageHeight: 170,
+        });
+        await swalst.fire({
+          title: "maaf kaka cuma bisa bantu lewat do'a &#129402;",
+          imageUrl: "maaf.gif",
+          imageWidth: 170,
+          imageHeight: 170,
+        });
+
+        // Show ending gif and blockquote after opening.gif
+        document.getElementById("endingGif").style.display = "block";
+        document.querySelector("blockquote").style.display = "block";
+
+        text = `cepet sembuh yaaa ${nama}`;
+        text2 =
+          "jaga diri baik-baik... tetep semangat, sabar yaa manis... besok pasti sembuh koo ^_^ ";
+        typeWriter(text, document.getElementById("text"), 100, () => {
+          typeWriter(text2, document.getElementById("text2"), 100);
+        });
+      }
+
+      function typeWriter(text, element, speed, callback) {
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+          } else if (callback) {
+            callback();
+          }
+        }
+        type();
+      }
+
+      mulaitanya();
+    </script>
+  </body>
+</html>
